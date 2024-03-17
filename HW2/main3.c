@@ -4,26 +4,33 @@
 #define BUFFER_SIZE 1024
 
 int main() {
-    FILE *input_file = fopen(__FILE__, "r"); 
-    FILE *output_file = fopen("main2.txt", "w");
+    FILE *input_file = fopen("main3.c", "r"); 
+    char buffer[BUFFER_SIZE];
+	int line_number = 1;
+    int main_line = 0;
 
-    if (input_file == NULL || output_file == NULL) {
+    if (input_file == NULL) {
         printf("無法打開文件。\n");
         return 1;
     }
-
-    char buffer[BUFFER_SIZE];
-    int line_number = 1;
-    int main_line = 0;
-
     
     while (fgets(buffer, BUFFER_SIZE, input_file) != NULL) {
-        if (main_line == 0 && strstr(buffer, "int main()") != NULL) {
+		if (main_line == 0 && strstr(buffer, "int main()") != NULL) {
             main_line = line_number;
+			break;
         }
-        fprintf(output_file, "%s", buffer);
         line_number++;
+    } // end of while (fgets(buffer, bufSize, input_file) != NULL)
+
+    
+    if (main_line != 0) {
+        printf( "\n%d int main() {\n", main_line);
+    } else {
+        printf( "\n找不到 int main() 函数\n");
     }
+    fclose(input_file);
+    return 0;
+}
 
     
     if (main_line != 0) {
